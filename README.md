@@ -11,7 +11,7 @@
 #### Steps
 1. Install and build libs
 ```
-git clone https://github.com/PeizeSun/TransTrack.git
+git clone https://github.com/sYANGunique1111/transtrack_kitti.git
 cd TransTrack
 cd models/ops
 python setup.py build install
@@ -101,18 +101,3 @@ sh track_exps/crowdhuman_plus_mot_train.sh
 
 TransTrack is released under MIT License.
 
-
-## Citing
-
-If you use TransTrack in your research or wish to refer to the baseline results published here, please use the following BibTeX entries:
-
-```BibTeX
-
-@article{transtrack,
-  title   =  {TransTrack: Multiple-Object Tracking with Transformer},
-  author  =  {Peize Sun and Jinkun Cao and Yi Jiang and Rufeng Zhang and Enze Xie and Zehuan Yuan and Changhu Wang and Ping Luo},
-  journal =  {arXiv preprint arXiv: 2012.15460},
-  year    =  {2020}
-}
-
-```
