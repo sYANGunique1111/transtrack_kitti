@@ -12,7 +12,7 @@
 1. Install and build libs
 ```
 git clone https://github.com/sYANGunique1111/transtrack_kitti.git
-cd TransTrack
+cd transtrack_kitti
 cd models/ops
 python setup.py build install
 cd ../..
@@ -21,26 +21,13 @@ pip install -r requirements.txt
 
 2. Prepare datasets and annotations
 ```
-mkdir crowdhuman
-cp -r /path_to_crowdhuman_dataset/CrowdHuman_train crowdhuman/CrowdHuman_train
-cp -r /path_to_crowdhuman_dataset/CrowdHuman_val crowdhuman/CrowdHuman_val
-mkdir mot
+mkdir kitti
 cp -r /path_to_mot_dataset/train mot/train
 cp -r /path_to_mot_dataset/test mot/test
 ```
-CrowdHuman dataset is available in [CrowdHuman](https://www.crowdhuman.org/). 
+Kitti dataset is available in [Kitti](http://www.cvlibs.net/datasets/kitti/). 
 ```
-python3 track_tools/convert_crowdhuman_to_coco.py
-```
-MOT dataset is available in [MOT](https://motchallenge.net/).
-```
-python3 track_tools/convert_mot_to_coco.py
-```
-
-3. Pre-train on crowdhuman
-```
-sh track_exps/crowdhuman_train.sh
-python3 track_tools/crowdhuman_model_to_mot.py
+python3 track_tools/convert_kitti_to_coco.py
 ```
 The pre-trained model is available [crowdhuman_final.pth](https://drive.google.com/drive/folders/1DjPL8xWoXDASrxgsA3O06EspJRdUXFQ-?usp=sharing).
 
