@@ -37,7 +37,6 @@ class Tracker(object):
                 self.id_count += 1
                 obj = dict()
                 obj["score"] = float(scores[idx])
-                obj["class"] = int(classes[idx])
                 obj["bbox"] = bboxes[idx, :].cpu().numpy().tolist()
                 obj["tracking_id"] = self.id_count
 #                 obj['vxvy'] = [0.0, 0.0]
@@ -69,7 +68,6 @@ class Tracker(object):
             if scores[idx] >= self.score_thresh:
                 obj = dict()
                 obj["score"] = float(scores[idx])
-                obj["class"] = int(classes[idx])
                 obj["bbox"] = bboxes[idx, :].cpu().numpy().tolist()               
                 results.append(obj)        
                 results_dict[idx] = obj
@@ -91,7 +89,7 @@ class Tracker(object):
 
             matches = [[],[]]
             for (m0, m1) in zip(matched_indices[0], matched_indices[1]):
-                if (cost_bbox[m0, m1] > 1.2) or (results[m0]["class"] != tracks[m1]["class"]):
+                if cost_bbox[m0, m1] > 1.2:
                     unmatched_dets.append(m0)
                     unmatched_tracks.append(m1)
                 else:
@@ -100,16 +98,16 @@ class Tracker(object):
 
             for (m0, m1) in zip(matches[0], matches[1]):
                 track = results[m0]
-                if 'tracking_id' not in tracks[m1]:
-                    tracks[m1]['tracking_id'] = None
+                if track[m1]['tracking_id'] is False:
+                    track[m1]['tracking_id'] = None
                 track['tracking_id'] = tracks[m1]['tracking_id']
                 track['age'] = 1
                 track['active'] = 1
                 pre_box = tracks[m1]['bbox']
                 cur_box = track['bbox']
-#             pre_cx, pre_cy = (pre_box[0] + pre_box[2]) / 2, (pre_box[1] + pre_box[3]) / 2
-#             cur_cx, cur_cy = (cur_box[0] + cur_box[2]) / 2, (cur_box[1] + cur_box[3]) / 2
-#             track['vxvy'] = [cur_cx - pre_cx, cur_cy - pre_cy]
+    #             pre_cx, pre_cy = (pre_box[0] + pre_box[2]) / 2, (pre_box[1] + pre_box[3]) / 2
+    #             cur_cx, cur_cy = (cur_box[0] + cur_box[2]) / 2, (cur_box[1] + cur_box[3]) / 2
+    #             track['vxvy'] = [cur_cx - pre_cx, cur_cy - pre_cy]
                 ret.append(track)
 
             for i in unmatched_dets:
@@ -124,8 +122,7 @@ class Tracker(object):
         ret_unmatched_tracks = []
         for i in unmatched_tracks:
             track = tracks[i]
-            if 'age' not in track:
-                track['age'] = self.max_age
+            print(track['age'])
             if track['age'] < self.max_age:
                 track['age'] += 1
                 track['active'] = 0

@@ -436,7 +436,18 @@ class MLP(nn.Module):
 
 
 def build(args):
+    if args.dataset_file == 'coco':
+        num_classes = 91 
+    elif args.dataset_file == 'roaddamage':
+        num_classes = 9
+    elif (args.dataset_file == 'kitti') or (args.dataset_file == 'kitti_origin'):
+        num_classes = 8
+    else:  
+        num_classes = 20
+    '''
     num_classes = 20 if args.dataset_file != 'coco' else 91
+    num_classes = 9 if args.dataset_file == 'roaddamage'
+    '''
     if args.dataset_file == "coco_panoptic":
         num_classes = 250
     device = torch.device(args.device)

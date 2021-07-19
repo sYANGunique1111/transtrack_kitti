@@ -3,7 +3,7 @@ import sys
 import json
 import cv2
 import glob as gb
-from track_tools.colormap import colormap
+from colormap import colormap
 
 
 def txt2img(visual_path="visual_val_gt"):
@@ -16,26 +16,56 @@ def txt2img(visual_path="visual_val_gt"):
         os.makedirs(visual_path)
     color_list = colormap()
 
-    gt_json_path = 'mot/annotations/val_half.json'
-    img_path = 'mot/train/'
-    show_video_names = ['MOT17-02-FRCNN', 
-                    'MOT17-04-FRCNN',
-                    'MOT17-05-FRCNN',
-                    'MOT17-09-FRCNN',
-                    'MOT17-10-FRCNN',        
-                    'MOT17-11-FRCNN',
-                    'MOT17-13-FRCNN']
+    gt_json_path = '../../dataset/Kitti_left/annotations_origin/val_half.json'
+    model_name = 'kitti_new2_ori20e3bval'
+    img_path = '../../dataset/Kitti_left/train/'
+    show_video_names = ['0000', 
+                    '0001',
+                    '0002',
+                    '0003',
+                    '0004',
+                    '0005',
+                    '0006',
+                    '0007',
+                    '0008',
+                    '0009',
+                    '0010',
+                    '0011',
+                    '0012',
+                    '0013',
+                    '0014',
+                    '0015',
+                    '0016',
+                    '0017',
+                    '0018',
+                    '0019',
+                    '0020',]
 
 
     test_json_path = 'mot/annotations/test.json'
     test_img_path = 'mot/test/'
-    test_show_video_names = ['MOT17-01-FRCNN', 
-                    'MOT17-03-FRCNN',
-                    'MOT17-06-FRCNN',
-                    'MOT17-07-FRCNN',
-                    'MOT17-08-FRCNN',        
-                    'MOT17-12-FRCNN',
-                    'MOT17-14-FRCNN']
+    test_show_video_names = ['0000', 
+                    '0001',
+                    '0002',
+                    '0003',
+                    '0004',
+                    '0005',
+                    '0006',
+                    '0007',
+                    '0008',
+                    '0009',
+                    '0010',
+                    '0011',
+                    '0012',
+                    '0013',
+                    '0014',
+                    '0015',
+                    '0016',
+                    '0017',
+                    '0018',
+                    '0019',
+                    '0020',]
+
     if visual_path == "visual_test_predict":
         show_video_names = test_show_video_names
         img_path = test_img_path
@@ -46,7 +76,7 @@ def txt2img(visual_path="visual_val_gt"):
         if visual_path == "visual_val_gt":
             txt_path = 'mot/train/' + show_video_name + '/gt/gt_val_half.txt'
         elif visual_path == "visual_val_predict":
-            txt_path = 'val/tracks/'+ show_video_name + '.txt'
+            txt_path = '../eval/{}/val/tracks/'.format(model_name)+ show_video_name + '.txt'
         elif visual_path == "visual_test_predict":
             txt_path = 'test/tracks/'+ show_video_name + '.txt'
         else:
@@ -57,7 +87,7 @@ def txt2img(visual_path="visual_val_gt"):
 
         for ann in gt_json["images"]:
             file_name = ann['file_name']
-            video_name = file_name.split('/')[0]
+            video_name = file_name.split('/')[-2]
             if video_name == show_video_name:
                 img_dict[ann['frame_id']] = img_path + file_name
 
@@ -100,7 +130,7 @@ def img2video(visual_path="visual_val_gt"):
     print("Starting img2video")
 
     img_paths = gb.glob(visual_path + "/*.png") 
-    fps = 16 
+    fps = 8 
     size = (1920,1080) 
     videowriter = cv2.VideoWriter(visual_path + "_video.avi",cv2.VideoWriter_fourcc('M','J','P','G'), fps, size)
 

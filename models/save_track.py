@@ -37,16 +37,17 @@ def save_track(results, out_root, video_to_images, video_names, data_split='val'
             for item in result:
                 if not ("tracking_id" in item):
                     raise NotImplementedError
-                tracking_id = item["tracking_id"]
-                bbox = item["bbox"]
-                bbox = [bbox[0], bbox[1], bbox[2], bbox[3], item['score'], item['active']]
-                tracks[tracking_id].append([frame_id] + bbox)
+                if item["tracking_id"] is not None:
+                    tracking_id = item["tracking_id"]
+                    bbox = item["bbox"]
+                    bbox = [bbox[0], bbox[1], bbox[2], bbox[3], item['score'], item['active'], item['class']]
+                    tracks[tracking_id].append([frame_id] + bbox)
 
         rename_track_id = 0
         for track_id in sorted(tracks):
             rename_track_id += 1
             for t in tracks[track_id]:
                 if t[6] > 0:
-                    f.write("{},{},{:.2f},{:.2f},{:.2f},{:.2f},-1,-1,-1,-1\n".format(
-                        t[0], rename_track_id, t[1], t[2], t[3] - t[1], t[4] - t[2]))
+                    f.write("{},{},{:.2f},{:.2f},{:.2f},{:.2f},-1,{},-1,-1\n".format(
+                        t[0], rename_track_id, t[1], t[2], t[3] - t[1], t[4] - t[2], t[-1]))
         f.close()

@@ -78,7 +78,7 @@ def get_args_parser():
                         help="Dropout applied in the transformer")
     parser.add_argument('--nheads', default=8, type=int,
                         help="Number of attention heads inside the transformer's attentions")
-    parser.add_argument('--num_queries', default=500, type=int,
+    parser.add_argument('--num_queries', default=300, type=int,
                         help="Number of query slots")
     parser.add_argument('--dec_n_points', default=4, type=int)
     parser.add_argument('--enc_n_points', default=4, type=int)
@@ -108,8 +108,8 @@ def get_args_parser():
     parser.add_argument('--focal_alpha', default=0.25, type=float)
 
     # dataset parameters
-    parser.add_argument('--dataset_file', default='coco')
-    parser.add_argument('--coco_path', default='./data/coco', type=str)
+    parser.add_argument('--dataset_file', default='mot')
+    parser.add_argument('--coco_path', default='../dataset/MOT17', type=str)
     parser.add_argument('--coco_panoptic_path', type=str)
     parser.add_argument('--remove_difficult', action='store_true')
 
@@ -182,7 +182,8 @@ def main(args):
             sampler_train = samplers.DistributedSampler(dataset_train)
             sampler_val = samplers.DistributedSampler(dataset_val, shuffle=False)
     else:
-        sampler_train = torch.utils.data.RandomSampler(dataset_train)
+        #sampler_train = torch.utils.data.RandomSampler(dataset_train)
+        sampler_train = torch.utils.data.SequentialSampler(dataset_train)
         sampler_val = torch.utils.data.SequentialSampler(dataset_val)
 
     batch_sampler_train = torch.utils.data.BatchSampler(
@@ -266,7 +267,7 @@ def main(args):
             for pg, pg_old in zip(optimizer.param_groups, p_groups):
                 pg['lr'] = pg_old['lr']
                 pg['initial_lr'] = pg_old['initial_lr']
-            print(optimizer.param_groups)
+            #print(optimizer.param_groups)
             lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
             # todo: this is a hack for doing experiment that resume from checkpoint and also modify lr scheduler (e.g., decrease lr in advance).
             args.override_resumed_lr_drop = True
@@ -282,6 +283,7 @@ def main(args):
 #                 model, criterion, postprocessors, data_loader_val, base_ds, device, args.output_dir
 #             )
     
+
     if args.eval:
         assert args.batch_size == 1, print("Now only support 1.")
         tracker = Tracker(score_thresh=args.track_thresh)
@@ -352,7 +354,7 @@ def main(args):
                     for name in filenames:
                         torch.save(coco_evaluator.coco_eval["bbox"].eval,
                                    output_dir / "eval" / name)
-
+        torch.cuda.empty_cache()
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print('Training time {}'.format(total_time_str))

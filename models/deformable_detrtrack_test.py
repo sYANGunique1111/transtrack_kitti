@@ -111,7 +111,7 @@ class DeformableDETR(nn.Module):
                 nn.init.constant_(box_embed.layers[-1].bias.data[2:], 0.0)
 
     def forward(self, samples: NestedTensor, pre_embed=None):
-        """ The forward expects a NestedTensor, which consists of:
+        """ The forward expects a NestedTensor, which consists of:
                - samples.tensor: batched images, of shape [batch_size x 3 x H x W]
                - samples.mask: a binary mask of shape [batch_size x H x W], containing 1 on padded pixels
 
@@ -469,12 +469,17 @@ class PostProcess(nn.Module):
 #         boxes = box_ops.box_cxcywh_to_xyxy(out_bbox)
 #         boxes = torch.gather(boxes, 1, topk_boxes.unsqueeze(-1).repeat(1,1,4))
         
-        scores, labels = prob[..., 1:2].max(-1)
-        labels = labels + 1
+        scores, labels = prob.max(-1)
+        #print(prob.max(-1)[0].shape)
+        #print(prob[..., 1:2].max(-1)[0].shape)
+        #scores, labels = prob[..., 1:2].max(-1)
+        #labels = labels + 1
         boxes = box_ops.box_cxcywh_to_xyxy(out_bbox)
-
-        track_scores, track_labels = track_prob[..., 1:2].max(-1)
-        track_labels = track_labels + 1
+        
+        track_scores, track_labels = track_prob.max(-1)
+        #track_scores, track_labels = track_prob[..., 1:2].max(-1)
+        #track_labels = track_labels + 1
+        #print('changes')
         track_boxes = box_ops.box_cxcywh_to_xyxy(track_bbox)
         
         # and from relative [0, 1] to absolute [0, height] coordinates
@@ -511,6 +516,10 @@ def build(args):
         num_classes = 20
     elif args.dataset_file == "coco_panoptic":
         num_classes = 250
+    elif args.dataset_file == 'roaddamage':
+        num_classes = 9
+    elif (args.dataset_file == 'kitti') or (args.dataset_file == 'kitti_origin'):
+        num_classes = 8
     else:
         num_classes = 20 
     device = torch.device(args.device)

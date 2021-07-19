@@ -1,4 +1,5 @@
 # output dir
+evaluation
 mot
 crowdhuman
 mix
@@ -17,6 +18,9 @@ visual_val_gt
 *.png
 *.json
 *.diff
+*.out
+*.pth
+*_out.py
 
 # compilation and distribution
 __pycache__

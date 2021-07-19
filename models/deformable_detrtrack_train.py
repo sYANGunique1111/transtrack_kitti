@@ -380,6 +380,7 @@ class SetCriterion(nn.Module):
         target_classes_onehot = torch.zeros([src_logits.shape[0], src_logits.shape[1], src_logits.shape[2] + 1],
                                             dtype=src_logits.dtype, layout=src_logits.layout, device=src_logits.device)
         target_classes_onehot.scatter_(2, target_classes.unsqueeze(-1), 1)
+        
 
         target_classes_onehot = target_classes_onehot[:,:,:-1]
         loss_ce = sigmoid_focal_loss(src_logits, target_classes_onehot, num_boxes, alpha=self.focal_alpha, gamma=2) * src_logits.shape[1]
@@ -579,15 +580,15 @@ class PostProcess(nn.Module):
 #         boxes = box_ops.box_cxcywh_to_xyxy(out_bbox)
 #         boxes = torch.gather(boxes, 1, topk_boxes.unsqueeze(-1).repeat(1,1,4))
         
-        scores, labels = prob[..., 1:2].max(-1)
-        labels = labels + 1
+        #scores, labels = prob[..., 1:2].max(-1)
+        scores, labels = prob.max(-1)
+        #labels = labels + 1
         boxes = box_ops.box_cxcywh_to_xyxy(out_bbox)
 
         # and from relative [0, 1] to absolute [0, height] coordinates
         img_h, img_w = target_sizes.unbind(1)
         scale_fct = torch.stack([img_w, img_h, img_w, img_h], dim=1)
         boxes = boxes * scale_fct[:, None, :]
-
         results = [{'scores': s, 'labels': l, 'boxes': b} for s, l, b in zip(scores, labels, boxes)]
 
         return results
@@ -615,6 +616,10 @@ def build(args):
         num_classes = 20
     elif args.dataset_file == "coco_panoptic":
         num_classes = 250
+    elif args.dataset_file == 'roaddamage':
+        num_classes = 9
+    elif (args.dataset_file == 'kitti') or (args.dataset_file == 'kitti_origin'):
+        num_classes = 8
     else:
         num_classes = 20 
     device = torch.device(args.device)

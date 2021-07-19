@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 
-GROUNDTRUTH=mot/train
-RESULTS=val/tracks
+GROUNDTRUTH= '/home/syang/stage/dataset/MOT17/train/'
+RESULTS= '/home/syang/stage/transtrack_origin/evaluation/mot20b/val/tracks'
 GT_TYPE=_val_half
 THRESHOLD=-1
 

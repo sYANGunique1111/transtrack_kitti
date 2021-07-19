@@ -66,6 +66,10 @@ def compare_dataframes(gts, ts):
 if __name__ == '__main__':
 
     args = parse_args()
+    args.score_threshold = -1
+    args.gt_type = '_val_half'
+    args.tests = '/home/syang/stage/transtrack_origin/evaluation/mot20b/val/tracks'
+    args.groundtruths = '/home/syang/stage/dataset/MOT17/train/*/gt'
 
     loglevel = getattr(logging, args.loglevel.upper(), None)
     if not isinstance(loglevel, int):
@@ -78,7 +82,7 @@ if __name__ == '__main__':
     gt_type = args.gt_type
     print('gt_type', gt_type)
     gtfiles = glob.glob(
-      os.path.join(args.groundtruths, '*/gt/gt{}.txt'.format(gt_type)))
+      os.path.join(args.groundtruths, 'gt{}.txt'.format(gt_type)))
     print('gt_files', gtfiles)
     tsfiles = [f for f in glob.glob(os.path.join(args.tests, '*.txt')) if not os.path.basename(f).startswith('eval')]
 

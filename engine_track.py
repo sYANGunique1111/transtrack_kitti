@@ -36,6 +36,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
 
     prefetcher = data_prefetcher(data_loader, device, prefetch=True)
     samples, targets = prefetcher.next()
+    
 
     # for samples, targets in metric_logger.log_every(data_loader, print_freq, header):
     for _ in metric_logger.log_every(range(len(data_loader)), print_freq, header):
