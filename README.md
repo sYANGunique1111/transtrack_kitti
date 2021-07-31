@@ -21,9 +21,9 @@ pip install -r requirements.txt
 
 2. Prepare datasets and annotations
 ```
-mkdir kitti
-cp -r /path_to_mot_dataset/train mot/train
-cp -r /path_to_mot_dataset/test mot/test
+mkdir ../dataset/kitti
+cp -r /path_to_kitti_dataset/train kitti/train
+cp -r /path_to_kitti_dataset/test kitti/test
 ```
 Kitti dataset is available in [Kitti](http://www.cvlibs.net/datasets/kitti/). 
 ```
@@ -33,12 +33,12 @@ The pre-trained model is available [crowdhuman_final.pth](https://drive.google.c
 
 4. Train TransTrack
 ```
-sh track_exps/crowdhuman_mot_trainhalf.sh
+sh track_exps/kitti_trainhalf.sh
 ```
 
 5. Evaluate TransTrack
 ```
-sh track_exps/mot_val.sh
+sh track_exps/kitti_val.sh
 sh track_exps/mota.sh
 ```
 
@@ -47,12 +47,7 @@ sh track_exps/mota.sh
 python3 track_tools/txt2video.py
 ```
 
-
-## Test set
-Pre-training data | Fine-tuning data | Training time | MOTA% | FP | FN | IDs
-:---:|:---:|:---:|:---:|:---:|:---:|:---:
-crowdhuman | mot17 | ~40h + 2h | 68.4 | 22137  | 152064  | 3942  
-crowdhuman | crowdhuman + mot17 | ~40h + 6h | 74.5 | 28323 | 112137 | 3663 
+ 
 
 #### Notes
 - Performance on test set is evaluated by [MOT challenge](https://motchallenge.net/).
