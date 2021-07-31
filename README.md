@@ -47,36 +47,6 @@ sh track_exps/mota.sh
 python3 track_tools/txt2video.py
 ```
 
- 
-
-#### Notes
-- Performance on test set is evaluated by [MOT challenge](https://motchallenge.net/).
-- (crowdhuman + mot17) is training on mixture of crowdhuman and mot17.
-- We won't release trained models for test test. Running as in Steps could reproduce them. 
- 
-#### Steps
-1. Train TransTrack
-```
-sh track_exps/crowdhuman_mot_train.sh
-```
-
-or
-
-1. Mix crowdhuman and mot17
-```
-mkdir -p mix/annotations
-cp mot/annotations/val_half.json mix/annotations/val_half.json
-cp mot/annotations/test.json mix/annotations/test.json
-cd mix
-ln -s ../mot/train mot_train
-ln -s ../crowdhuman/CrowdHuman_train crowdhuman_train
-cd ..
-python3 track_tools/mix_data.py
-```
-2. Train TransTrack
-```
-sh track_exps/crowdhuman_plus_mot_train.sh
-```
 
 
 ## License
